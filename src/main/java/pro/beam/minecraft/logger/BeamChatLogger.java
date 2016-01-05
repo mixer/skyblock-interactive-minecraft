@@ -18,68 +18,69 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class BeamChatLogger extends BeamBukkitLogger {
-    protected final TetrisBukkitConnector bridge;
-    protected final BeamAPI beam;
-    protected final int channel;
+	protected final TetrisBukkitConnector bridge;
+	protected final BeamAPI beam;
+	protected final int channel;
 
-    public BeamChatLogger(InteractivePlugin plugin) {
-        super(plugin);
+	public BeamChatLogger(InteractivePlugin plugin) {
+		super(plugin);
 
-        this.bridge = plugin.getBridge();
-        this.beam = this.bridge.getBeam();
-        this.channel = plugin.getConfig().getInt("beam.auth.channel");
-    }
+		this.bridge = plugin.getBridge();
+		this.beam = this.bridge.getBeam();
+		this.channel = plugin.getConfig().getInt("beam.auth.channel");
+	}
 
-    public void start() throws ExecutionException, InterruptedException, BeamException {
-        BeamUser user = this.bridge.getUser(this.beam);
-        BeamChat chat = this.beam.use(ChatService.class).findOne(this.channel).get();
-        BeamChatConnectable connectable = chat.makeConnectable(this.beam);
+	public void start() throws ExecutionException, InterruptedException, BeamException {
+		BeamUser user = this.bridge.getUser(this.beam);
+		BeamChat chat = this.beam.use(ChatService.class).findOne(this.channel).get();
+		BeamChatConnectable connectable = chat.makeConnectable(this.beam);
 
-        connectable.connectBlocking();
+		connectable.connectBlocking();
 
-        connectable.send(AuthenticateMessage.from(user.channel, user, chat.authkey));
-        connectable.on(IncomingMessageEvent.class, this.incomingMessageHandler());
-    }
+		connectable.send(AuthenticateMessage.from(user.channel, user, chat.authkey));
+		connectable.on(IncomingMessageEvent.class, incomingMessageHandler());
+	}
 
-    private EventHandler<IncomingMessageEvent> incomingMessageHandler() {
-        return new EventHandler<IncomingMessageEvent>() {
-            @Override public void onEvent(IncomingMessageEvent e) {
-                BeamChatLogger _ = BeamChatLogger.this;
-                _.log(Level.NORMAL, _.formatChat(e.data));
-            }
-        };
-    }
+	private EventHandler<IncomingMessageEvent> incomingMessageHandler() {
+		return new EventHandler<IncomingMessageEvent>() {
+			@Override
+			public void onEvent(IncomingMessageEvent e) {
+				BeamChatLogger logger = BeamChatLogger.this;
+				logger.log(Level.NORMAL, logger.formatChat(e.data));
+			}
+		};
+	}
 
-    private String formatChat(IncomingMessageData data) {
-        StringBuffer buf = new StringBuffer();
+	private String formatChat(IncomingMessageData data) {
+		StringBuffer buf = new StringBuffer();
 
-        buf.append(this.getColorFor(data.userRoles));
-        buf.append(data.userName);
+		buf.append(getColorFor(data.userRoles));
+		buf.append(data.userName);
 
-        buf.append(ChatColor.RESET);
-        buf.append(ChatColor.DARK_GRAY + ": ");
-        buf.append(data.asString());
+		buf.append(ChatColor.RESET);
+		buf.append(ChatColor.DARK_GRAY + ": ");
+		buf.append(data.asString());
 
-        return buf.toString();
-    }
+		return buf.toString();
+	}
 
-    private ChatColor getColorFor(List<BeamUser.Role> userRoles) {
-        if (userRoles.contains(BeamUser.Role.OWNER) || userRoles.contains(BeamUser.Role.ADMIN)) {
-            return ChatColor.DARK_RED;
-        } else if (userRoles.contains(BeamUser.Role.DEVELOPER)) {
-            return ChatColor.GOLD;
-        } else if (userRoles.contains(BeamUser.Role.GLOBAL_MOD)) {
-            return ChatColor.DARK_GREEN;
-        } else if (userRoles.contains(BeamUser.Role.MOD)) {
-            return ChatColor.GREEN;
-        } else if (userRoles.contains(BeamUser.Role.SUBSCRIBER)) {
-            return ChatColor.AQUA;
-        } else if (userRoles.contains(BeamUser.Role.PRO)) {
-            return ChatColor.DARK_PURPLE;
-        } else if (userRoles.contains(BeamUser.Role.BANNED)) {
-            return ChatColor.BLACK;
-        }
+	private ChatColor getColorFor(List<BeamUser.Role> userRoles) {
+		if (userRoles.contains(BeamUser.Role.OWNER) || userRoles.contains(BeamUser.Role.ADMIN)) {
+			return ChatColor.DARK_RED;
+		} else if (userRoles.contains(BeamUser.Role.DEVELOPER)) {
+			return ChatColor.GOLD;
+		} else if (userRoles.contains(BeamUser.Role.GLOBAL_MOD)) {
+			return ChatColor.DARK_GREEN;
+		} else if (userRoles.contains(BeamUser.Role.MOD)) {
+			return ChatColor.GREEN;
+		} else if (userRoles.contains(BeamUser.Role.SUBSCRIBER)) {
+			return ChatColor.AQUA;
+		} else if (userRoles.contains(BeamUser.Role.PRO)) {
+			return ChatColor.DARK_PURPLE;
+		} else if (userRoles.contains(BeamUser.Role.BANNED)) {
+			return ChatColor.BLACK;
+		}
 
-        return ChatColor.GRAY;
-    }
+		return ChatColor.GRAY;
+	}
 }

@@ -4,6 +4,8 @@ beam:
     username: "matt"
     password: "welovenetworkz"
   auth:
-    username:
-    password:
-    channel:
+    username: "BeamName"
+    password: "BeamPass"
+    channel: 0
+minecraft:
+  username: "minecraftName"
