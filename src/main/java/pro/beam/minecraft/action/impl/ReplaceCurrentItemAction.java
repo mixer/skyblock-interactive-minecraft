@@ -29,7 +29,7 @@ public class ReplaceCurrentItemAction extends AbstractBukkitAction {
 
 	@Override
 	public void take(Protocol.Report report) {
-		Player player = getPlayer();
+		final Player player = getPlayer();
 
 		if ((player == null) || this.active) {
 			return;

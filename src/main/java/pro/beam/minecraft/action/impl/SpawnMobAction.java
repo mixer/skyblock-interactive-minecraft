@@ -27,7 +27,7 @@ public abstract class SpawnMobAction extends AbstractBukkitAction {
 
 	@Override
 	public void take(Protocol.Report report) {
-		Player p = getPlayer();
+		final Player p = getPlayer();
 
 		if (p != null) {
 
@@ -36,7 +36,8 @@ public abstract class SpawnMobAction extends AbstractBukkitAction {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(ChatColor.GRAY);
 			buffer.append(ChatColor.ITALIC);
-			buffer.append("Spawning " + faction + " Mob!");
+			buffer.append("S" +
+					"pawning " + faction + " Mob!");
 
 			p.sendMessage(buffer.toString());
 

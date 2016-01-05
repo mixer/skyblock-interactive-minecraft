@@ -53,7 +53,7 @@ public class RandomEnchantAction extends AbstractBukkitAction {
 
 	@Override
 	public void take(Protocol.Report report) {
-		Player p = getPlayer();
+		final Player p = getPlayer();
 
 		if (p != null) {
 			if (InteractivePlugin.INSTANCE != null) {

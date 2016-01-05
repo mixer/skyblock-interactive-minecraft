@@ -52,7 +52,7 @@ public class CreateBonusIslandAction extends AbstractBukkitAction {
 		InteractivePlugin.INSTANCE.addIsland(l.getBlockX(), l.getBlockZ());
 	}
 
-	private void fill(Location l, int a, int b, Material type) {
+	private void fill(final Location l, final int a, final int b, final Material type) {
 		if (InteractivePlugin.INSTANCE != null) {
 			Bukkit.getScheduler().runTaskLater(InteractivePlugin.INSTANCE, new Runnable() {
 				@Override
@@ -68,7 +68,7 @@ public class CreateBonusIslandAction extends AbstractBukkitAction {
 			}, 1);
 		}
 	}
-	private void spawnChest(Location l) {
+	private void spawnChest(final Location l) {
 		if (InteractivePlugin.INSTANCE != null) {
 			Bukkit.getScheduler().runTaskLater(InteractivePlugin.INSTANCE, new Runnable() {
 				@Override
