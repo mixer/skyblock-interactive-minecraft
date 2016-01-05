@@ -23,10 +23,15 @@ public class TetrisBukkitConnector {
 
 	public BeamAPI getBeam() {
 		URI uri = URI.create(this.config.getString("beam.http.url"));
-		String username = this.config.getString("beam.http.username");
-		String password = this.config.getString("beam.http.password");
+		String username = this.config.getString("beam.http.username", null);
+		String password = this.config.getString("beam.http.password", null);
 
-		return new BeamAPI(uri, username, password);
+		if (username == null && password == null) {
+			return new BeamAPI();
+		} else {
+			return new BeamAPI(uri, username, password);
+		}
+
 	}
 
 	public BeamUser getUser(BeamAPI beam) throws BeamException {
