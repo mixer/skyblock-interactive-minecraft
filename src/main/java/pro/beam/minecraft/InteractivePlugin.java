@@ -73,8 +73,7 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
 		InteractivePlugin.INSTANCE = this;
 		connectToBeam();
 		getServer().getPluginManager().registerEvents(this, this);
-		System.out.println("Beam Interactive enabled...");
-		this.logger.log(ILogger.Level.NORMAL, "Beam Interactive enabled... 222");
+		this.logger.log(ILogger.Level.NORMAL, "Beam Interactive enabled... ");
 
 		this.islandsConfig = YamlConfiguration.loadConfiguration(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
 
@@ -82,7 +81,6 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
 		this.islands = new ArrayList<IslandPosition>();
 
 		for (String island : this.islandsStrings) {
-			System.out.println("Found Island " + island);
 			String[] islandSplit = island.split(",");
 			this.islands.add(new IslandPosition(Integer.parseInt(islandSplit[0]), Integer.parseInt(islandSplit[1])));
 		}
@@ -97,12 +95,6 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
 		this.islands.add(new IslandPosition(x, z));
 
 		this.islandsConfig.set("islands", this.islandsStrings);
-
-		System.out.println("Listing Islands...");
-		for (IslandPosition island : this.islands) {
-			System.out.println(island.toString());
-		}
-		System.out.println("Listing Islands... done");
 
 		try {
 			this.islandsConfig.save(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
