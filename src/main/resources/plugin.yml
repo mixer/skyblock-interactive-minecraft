@@ -1,0 +1,7 @@
+name: BeamInteractive
+version: ${version}
+description: ${description}
+author: Beam LLC
+website: https://beam.pro/
+main: ${plugin.mainClass}
+prefix: ${plugin.prefix}

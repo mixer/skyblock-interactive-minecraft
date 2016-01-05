@@ -1,0 +1,9 @@
+beam:
+  http:
+    url: "https://lab.beam.pro/api/v1/"
+    username: "matt"
+    password: "welovenetworkz"
+  auth:
+    username:
+    password:
+    channel:
