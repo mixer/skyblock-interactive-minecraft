@@ -12,11 +12,6 @@ public class IslandPosition {
 		this.z = z;
 	}
 
-	@Override
-	public String toString() {
-		return "IslandPosition [x=" + this.x + ", z=" + this.z + "]";
-	}
-
 	public double distance(Location locationTo) {
 		return Math.sqrt(((locationTo.getBlockX() - this.x) * (locationTo.getBlockX() - this.x))
 				+ ((locationTo.getBlockZ() - this.z) * (locationTo.getBlockZ() - this.z)));
