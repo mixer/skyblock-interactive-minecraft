@@ -161,7 +161,6 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
         }
 
         double distanceFrom = closest.distance(event.getFrom());
-        this.logger.log(ILogger.Level.NORMAL, "" + distanceTo + " " + closest);
         if (distanceFrom < distanceTo) {
             if (distanceTo >= 40) {
                 event.setCancelled(true);

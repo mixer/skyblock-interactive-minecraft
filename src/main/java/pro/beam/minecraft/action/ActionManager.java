@@ -4,18 +4,18 @@ import com.google.common.collect.Maps;
 import pro.beam.interactive.net.packet.Protocol;
 import pro.beam.interactive.net.packet.Protocol.ProgressUpdate;
 import pro.beam.interactive.net.packet.Protocol.ProgressUpdate.Progress.TargetType;
-import pro.beam.interactive.robot.Robot;
+import pro.beam.minecraft.InteractivePlugin;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class ActionManager {
     protected final Map<TactileInput, Action> actions;
-    protected final Robot robot;
+    protected final InteractivePlugin plugin;
 
-    public ActionManager(Robot robot) {
+    public ActionManager(InteractivePlugin plugin) {
         this.actions = Maps.newHashMap();
-        this.robot = robot;
+        this.plugin = plugin;
     }
 
     public ActionManager register(TactileInput i, Action a) {
@@ -41,7 +41,7 @@ public class ActionManager {
         }
 
         if (progress.getProgressCount() > 0) {
-            this.robot.write(progress.build());
+            this.plugin.robot.write(progress.build());
         }
     }
 }

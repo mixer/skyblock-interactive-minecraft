@@ -10,9 +10,10 @@ public class Game {
     public static String minecraftUsername;
 
     public BeamAPI beam;
+
     public Game(InteractivePlugin plugin) {
         this.plugin = plugin;
 
-        this.actions = new ActionManager(this.plugin.robot);
+        this.actions = new ActionManager(this.plugin);
     }
 }
