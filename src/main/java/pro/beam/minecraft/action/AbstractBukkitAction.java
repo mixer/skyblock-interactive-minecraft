@@ -6,27 +6,27 @@ import org.bukkit.entity.Player;
 import pro.beam.minecraft.game.Game;
 
 public abstract class AbstractBukkitAction implements Action {
-	protected final Server server;
+    protected final Server server;
 
-	public AbstractBukkitAction(Server server) {
-		this.server = server;
-	}
+    public AbstractBukkitAction(Server server) {
+        this.server = server;
+    }
 
-	protected Player getPlayer() {
-		Player ret = null;
+    protected Player getPlayer() {
+        Player ret = null;
 
-		if (Game.minecraftUsername.isEmpty() == false) {
-			for (Player p : this.server.getOnlinePlayers()) {
-				if (p.getName().equals(Game.minecraftUsername)) {
-					ret = p;
-				}
-			}
-		}
+        if (Game.minecraftUsername.isEmpty() == false) {
+            for (Player p : this.server.getOnlinePlayers()) {
+                if (p.getName().equals(Game.minecraftUsername)) {
+                    ret = p;
+                }
+            }
+        }
 
-		if (ret == null) {
-			System.out.println("ERROR! Player Not Found: " + Game.minecraftUsername);
-		}
+        if (ret == null) {
+            System.out.println("ERROR! Player Not Found: " + Game.minecraftUsername);
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 }

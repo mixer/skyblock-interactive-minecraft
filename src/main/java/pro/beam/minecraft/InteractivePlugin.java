@@ -35,137 +35,137 @@ import pro.beam.minecraft.logger.BeamChatLogger;
 import pro.beam.minecraft.logger.ILogger;
 
 public class InteractivePlugin extends JavaPlugin implements Listener {
-	protected final Game game;
-	public final ILogger logger;
+    protected final Game game;
+    public final ILogger logger;
 
-	public BeamAPI beam;
-	public Robot robot;
+    public BeamAPI beam;
+    public Robot robot;
 
-	public InteractivePlugin() {
-		this.game = new Game(this);
+    public InteractivePlugin() {
+        this.game = new Game(this);
 
-		// @formatter:off
-		this.game.actions
-			.register(new TactileInput(0, 0.5),	new ReplaceCurrentItemAction(this.game.plugin.getServer()))
-			.register(new TactileInput(1, 0.5), new CreateBonusIslandAction(this.game.plugin.getServer()))
-			.register(new TactileInput(2, 0.5),	new SpawnHostileMobAction(this.game.plugin.getServer()))
-			.register(new TactileInput(3, 0.5),	new SpawnFriendlyMobAction(this.game.plugin.getServer()))
-			.register(new TactileInput(4, 0.5),	new SpawnTreeAction(this.game.plugin.getServer()))
-			.register(new TactileInput(5, 0.5),	new RandomEnchantAction(this.game.plugin.getServer()))
-			.register(new TactileInput(6, 0.5),	new ChangeTimeAction(this.game.plugin.getServer()))
-			.register(new TactileInput(7, 0.5),	new RandomPotionAction(this.game.plugin.getServer()));
-		// @formatter:on
+        // @formatter:off
+        this.game.actions
+            .register(new TactileInput(0, 0.5),	new ReplaceCurrentItemAction(this.game.plugin.getServer()))
+            .register(new TactileInput(1, 0.5), new CreateBonusIslandAction(this.game.plugin.getServer()))
+            .register(new TactileInput(2, 0.5),	new SpawnHostileMobAction(this.game.plugin.getServer()))
+            .register(new TactileInput(3, 0.5),	new SpawnFriendlyMobAction(this.game.plugin.getServer()))
+            .register(new TactileInput(4, 0.5),	new SpawnTreeAction(this.game.plugin.getServer()))
+            .register(new TactileInput(5, 0.5),	new RandomEnchantAction(this.game.plugin.getServer()))
+            .register(new TactileInput(6, 0.5),	new ChangeTimeAction(this.game.plugin.getServer()))
+            .register(new TactileInput(7, 0.5),	new RandomPotionAction(this.game.plugin.getServer()));
+        // @formatter:on
 
-		this.logger = new BeamBukkitLogger(this);
-	}
+        this.logger = new BeamBukkitLogger(this);
+    }
 
-	public static InteractivePlugin INSTANCE;
+    public static InteractivePlugin INSTANCE;
 
-	FileConfiguration islandsConfig;
+    FileConfiguration islandsConfig;
 
-	List<String> islandsStrings;
-	List<IslandPosition> islands;
+    List<String> islandsStrings;
+    List<IslandPosition> islands;
 
-	boolean mainlandReached;
+    boolean mainlandReached;
 
-	@Override
-	public void onEnable() {
-		InteractivePlugin.INSTANCE = this;
-		connectToBeam();
-		getServer().getPluginManager().registerEvents(this, this);
-		this.logger.log(ILogger.Level.NORMAL, "Beam Interactive enabled... ");
+    @Override
+    public void onEnable() {
+        InteractivePlugin.INSTANCE = this;
+        connectToBeam();
+        getServer().getPluginManager().registerEvents(this, this);
+        this.logger.log(ILogger.Level.NORMAL, "Beam Interactive enabled... ");
 
-		this.islandsConfig = YamlConfiguration.loadConfiguration(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
+        this.islandsConfig = YamlConfiguration.loadConfiguration(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
 
-		this.islandsStrings = this.islandsConfig.getStringList("islands");
-		this.islands = new ArrayList<IslandPosition>();
+        this.islandsStrings = this.islandsConfig.getStringList("islands");
+        this.islands = new ArrayList<IslandPosition>();
 
-		for (String island : this.islandsStrings) {
-			String[] islandSplit = island.split(",");
-			this.islands.add(new IslandPosition(Integer.parseInt(islandSplit[0]), Integer.parseInt(islandSplit[1])));
-		}
+        for (String island : this.islandsStrings) {
+            String[] islandSplit = island.split(",");
+            this.islands.add(new IslandPosition(Integer.parseInt(islandSplit[0]), Integer.parseInt(islandSplit[1])));
+        }
 
-		this.mainlandReached = this.islandsConfig.getBoolean("mainlandReached");
+        this.mainlandReached = this.islandsConfig.getBoolean("mainlandReached");
 
-		System.out.println("Beam Interactive enabled... done");
-	}
+        System.out.println("Beam Interactive enabled... done");
+    }
 
-	public void addIsland(int x, int z) {
-		this.islandsStrings.add(x + "," + z);
-		this.islands.add(new IslandPosition(x, z));
+    public void addIsland(int x, int z) {
+        this.islandsStrings.add(x + "," + z);
+        this.islands.add(new IslandPosition(x, z));
 
-		this.islandsConfig.set("islands", this.islandsStrings);
+        this.islandsConfig.set("islands", this.islandsStrings);
 
-		try {
-			this.islandsConfig.save(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            this.islandsConfig.save(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void onDisable() {
-		InteractivePlugin.INSTANCE = null;
-		this.logger.log(ILogger.Level.NORMAL, "Beam Interactive disabled...");
-	}
+    @Override
+    public void onDisable() {
+        InteractivePlugin.INSTANCE = null;
+        this.logger.log(ILogger.Level.NORMAL, "Beam Interactive disabled...");
+    }
 
-	protected void connectToBeam() {
-		this.beam = getBridge().getBeam();
+    protected void connectToBeam() {
+        this.beam = getBridge().getBeam();
 
-		try {
-			this.robot = getBridge().getRobot(this.beam).get();
-			this.robot.on(Protocol.Report.class, new ActionDispatchEventListener(this.game.actions));
-		} catch (InterruptedException | ExecutionException e) {
-			e.getCause().printStackTrace();
-		}
+        try {
+            this.robot = getBridge().getRobot(this.beam).get();
+            this.robot.on(Protocol.Report.class, new ActionDispatchEventListener(this.game.actions));
+        } catch (InterruptedException | ExecutionException e) {
+            e.getCause().printStackTrace();
+        }
 
-		try {
-			new BeamChatLogger(this).start();
-		} catch (Exception e) {
-			this.logger.log(ILogger.Level.URGENT, e.getMessage());
-		}
-	}
+        try {
+            new BeamChatLogger(this).start();
+        } catch (Exception e) {
+            this.logger.log(ILogger.Level.URGENT, e.getMessage());
+        }
+    }
 
-	public TetrisBukkitConnector getBridge() {
-		return new TetrisBukkitConnector(getConfig());
-	}
+    public TetrisBukkitConnector getBridge() {
+        return new TetrisBukkitConnector(getConfig());
+    }
 
-	private IslandPosition spawn = new IslandPosition(15, 275);
+    private IslandPosition spawn = new IslandPosition(15, 275);
 
-	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event) {
-		Location locationTo = event.getTo();
-		IslandPosition closest = this.spawn;
-		double distanceToSpawn = this.spawn.distance(locationTo);
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Location locationTo = event.getTo();
+        IslandPosition closest = this.spawn;
+        double distanceToSpawn = this.spawn.distance(locationTo);
 
-		if (this.mainlandReached) {
-			return;
-		} else if (distanceToSpawn > 210) {
-			this.mainlandReached = true;
-			this.islandsConfig.set("mainlandReached", true);
-			try {
-				this.islandsConfig.save(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
+        if (this.mainlandReached) {
+            return;
+        } else if (distanceToSpawn > 210) {
+            this.mainlandReached = true;
+            this.islandsConfig.set("mainlandReached", true);
+            try {
+                this.islandsConfig.save(new File(new File(getServer().getWorldContainer(), "world"), "islands.yml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
 
-		double distanceTo = distanceToSpawn;
-		for (IslandPosition island : this.islands) {
-			double distance = island.distance(locationTo);
-			if (distance < distanceTo) {
-				distanceTo = distance;
-				closest = island;
-			}
-		}
+        double distanceTo = distanceToSpawn;
+        for (IslandPosition island : this.islands) {
+            double distance = island.distance(locationTo);
+            if (distance < distanceTo) {
+                distanceTo = distance;
+                closest = island;
+            }
+        }
 
-		double distanceFrom = closest.distance(event.getFrom());
-		this.logger.log(ILogger.Level.NORMAL, "" + distanceTo + " " + closest);
-		if (distanceFrom < distanceTo) {
-			if (distanceTo >= 40) {
-				event.setCancelled(true);
-			}
-		}
-	}
+        double distanceFrom = closest.distance(event.getFrom());
+        this.logger.log(ILogger.Level.NORMAL, "" + distanceTo + " " + closest);
+        if (distanceFrom < distanceTo) {
+            if (distanceTo >= 40) {
+                event.setCancelled(true);
+            }
+        }
+    }
 }

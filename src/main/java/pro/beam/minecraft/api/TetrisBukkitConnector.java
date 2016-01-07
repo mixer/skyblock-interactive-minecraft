@@ -13,58 +13,58 @@ import pro.beam.minecraft.game.Game;
 import java.net.URI;
 
 public class TetrisBukkitConnector {
-	protected final Configuration config;
+    protected final Configuration config;
 
-	public final String minecraftName = "";
+    public final String minecraftName = "";
 
-	public TetrisBukkitConnector(Configuration config) {
-		this.config = config;
-	}
+    public TetrisBukkitConnector(Configuration config) {
+        this.config = config;
+    }
 
-	public BeamAPI getBeam() {
-		URI uri = URI.create(this.config.getString("beam.http.url"));
-		String username = this.config.getString("beam.http.username", null);
-		String password = this.config.getString("beam.http.password", null);
+    public BeamAPI getBeam() {
+        URI uri = URI.create(this.config.getString("beam.http.url"));
+        String username = this.config.getString("beam.http.username", null);
+        String password = this.config.getString("beam.http.password", null);
 
-		if (username == null && password == null) {
-			return new BeamAPI();
-		} else {
-			return new BeamAPI(uri, username, password);
-		}
+        if (username == null && password == null) {
+            return new BeamAPI();
+        } else {
+            return new BeamAPI(uri, username, password);
+        }
 
-	}
+    }
 
-	public BeamUser getUser(BeamAPI beam) throws BeamException {
-		String username = this.config.getString("beam.auth.username");
-		String password = this.config.getString("beam.auth.password");
-		String twoFactor = this.config.getString("beam.auth.twoFactor");
+    public BeamUser getUser(BeamAPI beam) throws BeamException {
+        String username = this.config.getString("beam.auth.username");
+        String password = this.config.getString("beam.auth.password");
+        String twoFactor = this.config.getString("beam.auth.twoFactor");
 
-		Game.minecraftUsername = this.config.getString("minecraft.username");
+        Game.minecraftUsername = this.config.getString("minecraft.username");
 
-		CheckedFuture<BeamUser, BeamException> task;
-		if (twoFactor == null) {
-			task = beam.use(UsersService.class).login(username, password);
-		} else {
-			task = beam.use(UsersService.class).login(username, password, twoFactor);
-		}
+        CheckedFuture<BeamUser, BeamException> task;
+        if (twoFactor == null) {
+            task = beam.use(UsersService.class).login(username, password);
+        } else {
+            task = beam.use(UsersService.class).login(username, password, twoFactor);
+        }
 
-		return task.checkedGet();
-	}
+        return task.checkedGet();
+    }
 
-	public ListenableFuture<Robot> getRobot() {
-		return this.getRobot(getBeam());
-	}
+    public ListenableFuture<Robot> getRobot() {
+        return this.getRobot(getBeam());
+    }
 
-	public ListenableFuture<Robot> getRobot(BeamAPI beam) {
-		RobotBuilder builder = new RobotBuilder();
+    public ListenableFuture<Robot> getRobot(BeamAPI beam) {
+        RobotBuilder builder = new RobotBuilder();
 
-		builder.username(this.config.getString("beam.auth.username"));
-		builder.password(this.config.getString("beam.auth.password"));
-		builder.channel(this.config.getInt("beam.auth.channel"));
-		if (this.config.isSet("beam.auth.twoFactor")) {
-			builder.twoFactor(this.config.getString("beam.auth.twoFactor"));
-		}
+        builder.username(this.config.getString("beam.auth.username"));
+        builder.password(this.config.getString("beam.auth.password"));
+        builder.channel(this.config.getInt("beam.auth.channel"));
+        if (this.config.isSet("beam.auth.twoFactor")) {
+            builder.twoFactor(this.config.getString("beam.auth.twoFactor"));
+        }
 
-		return builder.build(beam);
-	}
+        return builder.build(beam);
+    }
 }

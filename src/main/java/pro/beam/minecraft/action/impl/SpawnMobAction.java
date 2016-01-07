@@ -17,54 +17,54 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class SpawnMobAction extends AbstractBukkitAction {
-	protected final ImmutableList<EntityType> spawnableTypes;
+    protected final ImmutableList<EntityType> spawnableTypes;
 
-	public SpawnMobAction(Server server, List<EntityType> spawnableTypes) {
-		super(server);
+    public SpawnMobAction(Server server, List<EntityType> spawnableTypes) {
+        super(server);
 
-		this.spawnableTypes = ImmutableList.copyOf(spawnableTypes);
-	}
+        this.spawnableTypes = ImmutableList.copyOf(spawnableTypes);
+    }
 
-	@Override
-	public void take(Protocol.Report report) {
-		final Player p = getPlayer();
+    @Override
+    public void take(Protocol.Report report) {
+        final Player p = getPlayer();
 
-		if (p != null) {
+        if (p != null) {
 
-			String faction = isHostile() ? "A Very Mean" : "A Really Nice";
+            String faction = isHostile() ? "A Very Mean" : "A Really Nice";
 
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(ChatColor.GRAY);
-			buffer.append(ChatColor.ITALIC);
-			buffer.append("S" +
-					"pawning " + faction + " Mob!");
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(ChatColor.GRAY);
+            buffer.append(ChatColor.ITALIC);
+            buffer.append("S" +
+                    "pawning " + faction + " Mob!");
 
-			p.sendMessage(buffer.toString());
+            p.sendMessage(buffer.toString());
 
-			if (InteractivePlugin.INSTANCE != null) {
-				Bukkit.getScheduler().runTaskLater(InteractivePlugin.INSTANCE, new Runnable() {
-					@Override
-					public void run() {
-						p.getWorld().spawnEntity(SpawnMobAction.this.getLocationWithin(p, 5), SpawnMobAction.this.getRandomEntity());
-					}
-				}, 1);
-			}
-		}
-	}
+            if (InteractivePlugin.INSTANCE != null) {
+                Bukkit.getScheduler().runTaskLater(InteractivePlugin.INSTANCE, new Runnable() {
+                    @Override
+                    public void run() {
+                        p.getWorld().spawnEntity(SpawnMobAction.this.getLocationWithin(p, 5), SpawnMobAction.this.getRandomEntity());
+                    }
+                }, 1);
+            }
+        }
+    }
 
-	private EntityType getRandomEntity() {
-		int i = new Random().nextInt(this.spawnableTypes.size());
-		return this.spawnableTypes.get(i);
-	}
+    private EntityType getRandomEntity() {
+        int i = new Random().nextInt(this.spawnableTypes.size());
+        return this.spawnableTypes.get(i);
+    }
 
-	private Location getLocationWithin(Player player, int i) {
-		Location position = PositionUtil.getSafeLocationWithin(player, 2, i);
-		if (position != null) {
-			return position;
-		} else {
-			return player.getLocation();
-		}
-	}
+    private Location getLocationWithin(Player player, int i) {
+        Location position = PositionUtil.getSafeLocationWithin(player, 2, i);
+        if (position != null) {
+            return position;
+        } else {
+            return player.getLocation();
+        }
+    }
 
-	protected abstract boolean isHostile();
+    protected abstract boolean isHostile();
 }
