@@ -4,6 +4,8 @@ import pro.beam.interactive.event.EventListener;
 import pro.beam.interactive.net.packet.Protocol;
 import pro.beam.minecraft.action.ActionManager;
 
+import java.io.IOException;
+
 public class ActionDispatchEventListener implements EventListener<Protocol.Report> {
     protected final ActionManager actions;
 
@@ -13,6 +15,10 @@ public class ActionDispatchEventListener implements EventListener<Protocol.Repor
 
     @Override
     public void handle(Protocol.Report report) {
-        this.actions.dispatch(report);
+        try {
+            this.actions.dispatch(report);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

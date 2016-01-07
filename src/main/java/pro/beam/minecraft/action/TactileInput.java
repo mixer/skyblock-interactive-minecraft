@@ -21,4 +21,8 @@ public class TactileInput implements Input {
 
         return false;
     }
+
+    public int code() {
+        return this.code;
+    }
 }
