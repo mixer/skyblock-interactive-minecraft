@@ -18,14 +18,7 @@ import pro.beam.api.BeamAPI;
 import pro.beam.interactive.net.packet.Protocol;
 import pro.beam.interactive.robot.Robot;
 import pro.beam.minecraft.action.TactileInput;
-import pro.beam.minecraft.action.impl.ChangeTimeAction;
-import pro.beam.minecraft.action.impl.CreateBonusIslandAction;
-import pro.beam.minecraft.action.impl.RandomEnchantAction;
-import pro.beam.minecraft.action.impl.RandomPotionAction;
-import pro.beam.minecraft.action.impl.ReplaceCurrentItemAction;
-import pro.beam.minecraft.action.impl.SpawnFriendlyMobAction;
-import pro.beam.minecraft.action.impl.SpawnHostileMobAction;
-import pro.beam.minecraft.action.impl.SpawnTreeAction;
+import pro.beam.minecraft.action.impl.*;
 import pro.beam.minecraft.api.ActionDispatchEventListener;
 import pro.beam.minecraft.api.TetrisBukkitConnector;
 import pro.beam.minecraft.containers.IslandPosition;
@@ -53,7 +46,8 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
             .register(new TactileInput(4, 0.5),	new SpawnTreeAction(this.game.plugin.getServer()))
             .register(new TactileInput(5, 0.5),	new RandomEnchantAction(this.game.plugin.getServer()))
             .register(new TactileInput(6, 0.5),	new ChangeTimeAction(this.game.plugin.getServer()))
-            .register(new TactileInput(7, 0.5),	new RandomPotionAction(this.game.plugin.getServer()));
+            .register(new TactileInput(7, 0.5),	new RandomPotionAction(this.game.plugin.getServer()))
+            .register(new TactileInput(8, 0.5),	new HealPlayerAction(this.game.plugin.getServer()));
         // @formatter:on
 
         this.logger = new BeamBukkitLogger(this);
