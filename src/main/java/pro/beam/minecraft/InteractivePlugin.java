@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pro.beam.api.BeamAPI;
+import pro.beam.api.exceptions.BeamException;
 import pro.beam.interactive.net.packet.Protocol;
 import pro.beam.interactive.robot.Robot;
 import pro.beam.minecraft.action.TactileInput;
@@ -113,9 +114,9 @@ public class InteractivePlugin extends JavaPlugin implements Listener {
         this.beam = getBridge().getBeam();
 
         try {
-            this.robot = getBridge().getRobot(this.beam).get();
+            this.robot = getBridge().getRobot(this.beam, getBridge().getUser(this.beam)).get();
             this.robot.on(Protocol.Report.class, new ActionDispatchEventListener(this.game.actions));
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | BeamException e) {
             e.getCause().printStackTrace();
         }
 

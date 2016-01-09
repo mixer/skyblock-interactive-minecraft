@@ -6,6 +6,5 @@ beam:
   auth:
     username: "BeamName"
     password: "BeamPass"
-    channel: 0
 minecraft:
   username: "minecraftName"

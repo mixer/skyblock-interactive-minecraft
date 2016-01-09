@@ -51,15 +51,18 @@ public class TetrisBukkitConnector {
         return task.checkedGet();
     }
 
-    public ListenableFuture<Robot> getRobot() {
-        return this.getRobot(getBeam());
+    public ListenableFuture<Robot> getRobot() throws BeamException {
+        BeamAPI beam = this.getBeam();
+        return this.getRobot(beam, this.getUser(beam));
     }
 
-    public ListenableFuture<Robot> getRobot(BeamAPI beam) {
+    public ListenableFuture<Robot> getRobot(BeamAPI beam, BeamUser user) {
         RobotBuilder builder = new RobotBuilder();
 
-        builder.username(this.config.getString("beam.auth.username"));
+        builder.username(user.username);
+        builder.channel(user.channel.id);
         builder.password(this.config.getString("beam.auth.password"));
+
         builder.channel(this.config.getInt("beam.auth.channel"));
         if (this.config.isSet("beam.auth.twoFactor")) {
             builder.twoFactor(this.config.getString("beam.auth.twoFactor"));
