@@ -1,8 +1,8 @@
 beam:
   http:
-    url: "https://lab.beam.pro/api/v1/"
-    username: "matt"
-    password: "welovenetworkz"
+    url: "https://beam.pro/api/v1/"
+    username:
+    password:
   auth:
     username: "BeamName"
     password: "BeamPass"
