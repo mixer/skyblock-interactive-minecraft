@@ -27,17 +27,15 @@ public class ActionManager {
         ProgressUpdate.Builder progress = ProgressUpdate.newBuilder();
 
         for (Map.Entry<TactileInput, Action> e : this.actions.entrySet()) {
-            if (!e.getKey().isMet(report)) {
-                continue;
-            }
-
-            e.getValue().take(report);
-
             progress.addProgress(ProgressUpdate.Progress.newBuilder()
                     .setTarget(TargetType.TACTILE)
                     .setCode(e.getKey().code)
                     .setFired(true)
                     .build());
+
+            if (e.getKey().isMet(report)) {
+                e.getValue().take(report);
+            }
         }
 
         if (progress.getProgressCount() > 0) {
