@@ -36,7 +36,7 @@
         <dependency>
             <groupId>pro.beam</groupId>
             <artifactId>interactive</artifactId>
-            <version>1.3.0-SNAPSHOT</version>
+            <version>1.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>

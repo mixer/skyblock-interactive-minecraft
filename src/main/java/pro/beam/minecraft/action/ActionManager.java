@@ -3,7 +3,6 @@ package pro.beam.minecraft.action;
 import com.google.common.collect.Maps;
 import pro.beam.interactive.net.packet.Protocol;
 import pro.beam.interactive.net.packet.Protocol.ProgressUpdate;
-import pro.beam.interactive.net.packet.Protocol.ProgressUpdate.Progress.TargetType;
 import pro.beam.minecraft.InteractivePlugin;
 
 import java.io.IOException;
@@ -33,14 +32,14 @@ public class ActionManager {
 
             e.getValue().take(report);
 
-            progress.addProgress(ProgressUpdate.Progress.newBuilder()
-                    .setTarget(TargetType.TACTILE)
-                    .setCode(e.getKey().code)
+            progress.addTactile(ProgressUpdate.TactileUpdate.newBuilder()
+                    .setId(e.getKey().code)
                     .setFired(true)
-                    .build());
+                    .build()
+            );
         }
 
-        if (progress.getProgressCount() > 0) {
+        if (progress.getTactileCount() + progress.getJoystickCount() > 0) {
             this.plugin.robot.write(progress.build());
         }
     }
