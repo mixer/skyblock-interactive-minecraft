@@ -7,10 +7,14 @@ import pro.beam.minecraft.InteractivePlugin;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 public class ActionManager {
     protected final Map<TactileInput, Action> actions;
     protected final InteractivePlugin plugin;
+
+    protected final Set<Integer> pressedTactiles = new HashSet<Integer>();
 
     public ActionManager(InteractivePlugin plugin) {
         this.actions = Maps.newHashMap();
@@ -27,13 +31,25 @@ public class ActionManager {
 
         for (Map.Entry<TactileInput, Action> e : this.actions.entrySet()) {
             if (!e.getKey().isMet(report)) {
+                if (pressedTactiles.contains(e.getKey().code)) {
+                    pressedTactiles.remove(e.getKey().code);
+                    progress.addTactile(ProgressUpdate.TactileUpdate.newBuilder()
+                        .setId(e.getKey().code)
+                        .setProgress(0)
+                        .setFired(false)
+                        .build()
+                    );               
+                }
                 continue;
             }
 
             e.getValue().take(report);
 
+            pressedTactiles.add(e.getKey().code);
+
             progress.addTactile(ProgressUpdate.TactileUpdate.newBuilder()
                     .setId(e.getKey().code)
+                    .setProgress(1)
                     .setFired(true)
                     .build()
             );
