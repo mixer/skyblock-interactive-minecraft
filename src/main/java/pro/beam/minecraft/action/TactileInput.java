@@ -14,8 +14,7 @@ public class TactileInput implements Input {
     @Override
     public boolean isMet(Protocol.Report report) {
         for (Protocol.Report.TactileInfo info : report.getTactileList()) {
-            double holding = info.getHolding() / report.getUsers().getActive();
-            if ((info.getId() == this.code) && (holding >= this.threshold)) {
+            if ((info.getId() == this.code) && (info.getPressFrequency() > 0)) {
                 return true;
             }
         }
