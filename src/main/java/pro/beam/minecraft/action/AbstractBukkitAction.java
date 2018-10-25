@@ -13,20 +13,15 @@ public abstract class AbstractBukkitAction implements Action {
     }
 
     protected Player getPlayer() {
-        Player ret = null;
-
-        if (Game.minecraftUsername.isEmpty() == false) {
+        if (!Game.minecraftUsername.isEmpty()) {
             for (Player p : this.server.getOnlinePlayers()) {
                 if (p.getName().equals(Game.minecraftUsername)) {
-                    ret = p;
+                    return p;
                 }
             }
         }
 
-        if (ret == null) {
-            System.out.println("ERROR! Player Not Found: " + Game.minecraftUsername);
-        }
-
-        return ret;
+        System.out.println("ERROR! Player Not Found: " + Game.minecraftUsername);
+        return null;
     }
 }
